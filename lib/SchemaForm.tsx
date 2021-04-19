@@ -1,5 +1,5 @@
 import { defineComponent, PropType, provide } from 'vue'
-import { Schema, SchemaTypes } from './types'
+import { Schema, SchemaTypes, Theme } from './types'
 import SchemaItem from './SchemaItems'
 import { SchemaFormContextKey } from './context'
 
@@ -17,6 +17,10 @@ export default defineComponent({
       type: Function as PropType<(v: any) => void>,
       required: true,
     },
+    // theme: {
+    //   type: Object as PropType<Theme>,
+    //   required: true
+    // }
   },
   name: 'SchemaForm',
   setup(props, { slots, emit, attrs }) {
@@ -25,6 +29,7 @@ export default defineComponent({
     }
     const context: any = {
       SchemaItem,
+      // theme: props.theme
     }
     // 通过provide api向子节点提供SchemaItem组件
     provide(SchemaFormContextKey, context)

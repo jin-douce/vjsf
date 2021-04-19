@@ -1,5 +1,5 @@
 import { inject, reactive } from 'vue'
-import { CommonFieldType } from './types'
+import { CommonFieldType, Theme } from './types'
 
 // 维护inject用到的所有的key
 // 用Symbol保证唯一性，如果不同父组件提供了相同key，后者会覆盖前者

@@ -1,8 +1,9 @@
 import { defineComponent, PropType } from 'vue'
 import { createUseStyles } from 'vue-jss'
-import { FieldPropsDefine, Schema } from '../types'
+import { FieldPropsDefine, Schema, SelectionWidgetNames } from '../types'
 import { useVJSFContext } from '../context'
-import SelectionWidget from '../widgets/Selection'
+import { getWidget } from '../theme'
+// import SelectionWidget from '../widgets/Selection'
 
 const useStyles = createUseStyles({
   container: {
@@ -50,6 +51,7 @@ const ArrayItemWrapper = defineComponent({
   },
   setup(props, { slots }) {
     const classesRef = useStyles()
+    const context = useVJSFContext()
     const handleAdd = () => props.onAdd(props.index)
     const handleDown = () => props.onDown(props.index)
     const handleUp = () => props.onUp(props.index)
@@ -102,6 +104,7 @@ const ArrayItemWrapper = defineComponent({
 export default defineComponent({
   name: 'ArrayField',
   props: FieldPropsDefine,
+  
   setup(props) {
     const context = useVJSFContext()
 
@@ -143,10 +146,13 @@ export default defineComponent({
       arr.splice(index + 1, 0, item[0])
       props.onChange(arr)
     }
-
+    // 不在return里使用
+    const SelectionWidgetRef = getWidget(SelectionWidgetNames.SelectionWidget)
+    // return的是h函数
     return () => {
+      // const SelectionWidget = context.theme.widgets.SelectionWidget
+      const SelectionWidget = SelectionWidgetRef.value
       const { schema, rootSchema, value } = props
-
       const SchemaItem = context.SchemaItem
       // 判断数组类型
       const isMultiType = Array.isArray(schema.items)
