@@ -1,24 +1,10 @@
 import { defineComponent, PropType, ref, watch } from '@vue/runtime-core'
+import { SelectionWidgetPropsDefine, SelectionWidgetDefine } from '../types'
+import { withFormItem } from './FormItem'
 
-export default defineComponent({
+const Selection: SelectionWidgetDefine = withFormItem(defineComponent({
   name: 'SelectionWidget',
-  props: {
-    // value和onChange是通用的props
-    value: {},
-    onChange: {
-      type: Function as PropType<(v: any) => void>,
-      required: true,
-    },
-    options: {
-      type: Array as PropType<
-        {
-          key: string
-          value: any
-        }[]
-      >,
-      required: true,
-    },
-  },
+  props: SelectionWidgetPropsDefine,
   setup(props) {
     const currentValueRef = ref(props.value)
     watch(currentValueRef, (newv, oldv) => {
@@ -45,4 +31,6 @@ export default defineComponent({
       )
     }
   },
-})
+}))
+ 
+export default Selection

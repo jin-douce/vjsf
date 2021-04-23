@@ -4,6 +4,7 @@ import MonacoEditor from './components/MonacoEditor'
 import demos from './demos'
 import SchemaForm, { ThemeProvider } from '../lib'
 import themeDefault from '../lib/theme-default'
+import { result } from 'lodash'
 type Schema = any
 type UISchema = any
 
@@ -76,6 +77,7 @@ export default defineComponent({
       schemaCode: string
       dataCode: string
       uiSchemaCode: string
+      customValidate: ((d: any, e: any) => void ) | undefined
     } = reactive({
       schema: null,
       data: {},
@@ -83,22 +85,30 @@ export default defineComponent({
       schemaCode: '',
       dataCode: '',
       uiSchemaCode: '',
+      customValidate: undefined
     })
 
     watchEffect(() => {
       const index = selectedRef.value
-      const d = demos[index]
+      const d: any = demos[index]
       demo.schema = d.schema
       demo.data = d.default
       demo.uiSchema = d.uiSchema
       demo.schemaCode = toJson(d.schema)
       demo.dataCode = toJson(d.default)
       demo.uiSchemaCode = toJson(d.uiSchema)
+      demo.customValidate = d.customValidate
     })
 
     const methodRef: Ref<any> = ref()
-
     const classesRef = useStyles()
+
+    function validateForm(){
+      contextRef.value.doValidate().then((result: any) => {
+        console.log(result);
+        
+      })
+    }
 
     const handleChange = (v: any) => {
       demo.data = v
@@ -121,6 +131,8 @@ export default defineComponent({
     const handleSchemaChange = (v: string) => handleCodeChange('schema', v)
     const handleDataChange = (v: string) => handleCodeChange('data', v)
     const handleUISchemaChange = (v: string) => handleCodeChange('uiSchema', v)
+
+    const contextRef = ref()
 
     return () => {
       const classes = classesRef.value
@@ -177,6 +189,8 @@ export default defineComponent({
                 schema={demo.schema}
                 onChange={handleChange}
                 value={demo.data}
+                contextRef={contextRef}
+                customValidate = {demo.customValidate}
               />
               </ThemeProvider>
               
@@ -187,6 +201,7 @@ export default defineComponent({
                 contextRef={methodRef}
                 value={demo.data}
               /> */}
+              <button onClick={validateForm}>校 验</button>
             </div>
           </div>
         </div>

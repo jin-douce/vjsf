@@ -1,9 +1,24 @@
 import { defineComponent, PropType, ref, watch } from '@vue/runtime-core'
-import { SelectionWidgetPropsDefine, SelectionWedgetDefine } from '../types'
 
-const Selection: SelectionWedgetDefine = defineComponent({
+export default defineComponent({
   name: 'SelectionWidget',
-  props: SelectionWidgetPropsDefine,
+  props: {
+    // value和onChange是通用的props
+    value: {},
+    onChange: {
+      type: Function as PropType<(v: any) => void>,
+      required: true,
+    },
+    options: {
+      type: Array as PropType<
+        {
+          key: string
+          value: any
+        }[]
+      >,
+      required: true,
+    },
+  },
   setup(props) {
     const currentValueRef = ref(props.value)
     watch(currentValueRef, (newv, oldv) => {
@@ -32,4 +47,3 @@ const Selection: SelectionWedgetDefine = defineComponent({
   },
 })
 
-export default Selection

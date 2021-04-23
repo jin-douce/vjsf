@@ -152,7 +152,7 @@ export default defineComponent({
     return () => {
       // const SelectionWidget = context.theme.widgets.SelectionWidget
       const SelectionWidget = SelectionWidgetRef.value
-      const { schema, rootSchema, value } = props
+      const { schema, rootSchema, value, errorSchema } = props
       const SchemaItem = context.SchemaItem
       // 判断数组类型
       const isMultiType = Array.isArray(schema.items)
@@ -168,6 +168,7 @@ export default defineComponent({
             key={index}
             rootSchema={rootSchema}
             value={arr[index]}
+            errorSchema={errorSchema[index] || {}}
             onChange={(v: any) => handleArrayItemChange(v, index)}
           />
         ))
@@ -189,6 +190,7 @@ export default defineComponent({
                 value={v}
                 key={index}
                 rootSchema={rootSchema}
+                errorSchema={errorSchema[index] || {}}
                 onChange={(v: any) => handleArrayItemChange(v, index)}
               />
             </ArrayItemWrapper>
@@ -202,9 +204,11 @@ export default defineComponent({
         }))
         return (
           <SelectionWidget
+            schema={schema}
             onChange={props.onChange}
             value={props.value}
             options={options}
+            errors={errorSchema.__errors}
           />
         )
       }
