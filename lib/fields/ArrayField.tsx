@@ -3,6 +3,7 @@ import { createUseStyles } from 'vue-jss'
 import { FieldPropsDefine, Schema, SelectionWidgetNames } from '../types'
 import { useVJSFContext } from '../context'
 import { getWidget } from '../theme'
+import { isObject } from 'lodash'
 // import SelectionWidget from '../widgets/Selection'
 
 const useStyles = createUseStyles({
@@ -152,7 +153,8 @@ export default defineComponent({
     return () => {
       // const SelectionWidget = context.theme.widgets.SelectionWidget
       const SelectionWidget = SelectionWidgetRef.value
-      const { schema, rootSchema, value, errorSchema } = props
+
+      const { schema, rootSchema, value, errorSchema, uiSchema } = props
       const SchemaItem = context.SchemaItem
       // 判断数组类型
       const isMultiType = Array.isArray(schema.items)
@@ -162,16 +164,20 @@ export default defineComponent({
         // 多类型，固定长度数组
         const items: Schema[] = schema.items as any
         const arr = Array.isArray(value) ? value : []
-        return items.map((s: Schema, index: number) => (
+        return items.map((s: Schema, index: number) => {
+          const itemsUiSchema = uiSchema.items
+          const us = Array.isArray(itemsUiSchema) ? itemsUiSchema[index] || {} : itemsUiSchema || {}
+          return (
           <SchemaItem
             schema={s}
+            uiSchema={us}
             key={index}
             rootSchema={rootSchema}
             value={arr[index]}
             errorSchema={errorSchema[index] || {}}
             onChange={(v: any) => handleArrayItemChange(v, index)}
           />
-        ))
+        )})
       } else if (!isSelect) {
         // 单一类型，不固定长度数组
         const arr = Array.isArray(value) ? value : []
@@ -187,6 +193,7 @@ export default defineComponent({
             >
               <SchemaItem
                 schema={schema.items as Schema}
+                uiSchema={uiSchema.items as any || {}}
                 value={v}
                 key={index}
                 rootSchema={rootSchema}

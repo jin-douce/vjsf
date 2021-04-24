@@ -37,7 +37,7 @@ export default defineComponent({
     }
 
     return () => {
-      const { schema, rootSchema, value, errorSchema } = props
+      const { schema, rootSchema, value, errorSchema, uiSchema } = props
       // SchemaItem会根据类型进行分发，可以嵌套渲染
       const { SchemaItem } = context
       const properties = schema.properties || {}
@@ -46,6 +46,7 @@ export default defineComponent({
       return Object.keys(properties).map((k: string, index: number) => (
         <SchemaItem
           schema={properties[k]}
+          uiSchema={uiSchema.properties ? uiSchema.properties[k] || {} : {} }
           rootSchema={rootSchema}
           value={currentValue[k]}
           errorSchema={errorSchema[k] || {}}

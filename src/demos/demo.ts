@@ -1,3 +1,5 @@
+import PasswordWidget from '../components/PasswordWidget'
+
 export default {
   name: 'Demo',
   schema: {
@@ -26,6 +28,16 @@ export default {
       }, 2000)
     })
   },
-  uiSchema: {},
+  // 在uischema传入组件实现自定义组件
+  uiSchema: {
+    properties: {
+      pass1: {
+        widget: PasswordWidget,
+      },
+      pass2: {
+        color: 'red'
+      }
+    }
+  },
   default: 123,
 }

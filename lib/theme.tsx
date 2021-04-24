@@ -1,5 +1,6 @@
-import { PropType, defineComponent, provide, computed, inject, ComputedRef } from "vue";
-import { Theme, SelectionWidgetNames, CommonWidgetNames } from './types'
+import { isObject } from "lodash";
+import { PropType, defineComponent, provide, computed, inject, ComputedRef, ref } from "vue";
+import { Theme, SelectionWidgetNames, CommonWidgetNames, UISchema, CommonWidgetDefine } from './types'
 
 const THEME_PROVIDER_KEY = Symbol()
 const ThemeProvider = defineComponent({
@@ -20,7 +21,13 @@ const ThemeProvider = defineComponent({
   }
 })
 
-export function getWidget<T extends SelectionWidgetNames | CommonWidgetNames>(name: T){
+export function getWidget<T extends SelectionWidgetNames | CommonWidgetNames>
+(name: T, uiSchema?: UISchema)
+{
+  if(uiSchema?.widget && isObject(uiSchema.widget)){
+    // 返回的组件应该是ref
+    return ref(uiSchema.widget as CommonWidgetDefine)
+  }
   // 获取theme提供的所有的widget
   const context: ComputedRef<Theme> | undefined = inject<ComputedRef<Theme>>(THEME_PROVIDER_KEY)
   if(!context){
